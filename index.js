@@ -8,8 +8,11 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const server = require('http').Server(app)
-const io = require('socket.io')(server, { origins: '*:*' })
-
+const io = require('socket.io')(server,
+  { cors: {
+    origin:'http://localhost:3000' }
+  }
+)
 
 ; (async function () {
   try {
@@ -23,26 +26,28 @@ const io = require('socket.io')(server, { origins: '*:*' })
 })()
 
 const port = process.env.PORT || 5000
+const room = {}
 
 try {
   app
-    .use(cors())
+    .use(cors('http://localhost:3000'))
     .use(morgan('dev'))
     .use(express.json())
     .use(express.static('public'))
     .use('/api', require('./api/routes'))
 
-  server.listen(process.env.PORT, () => {
-    console.info('💻 Reboot Server Live')
-    console.info(`📡 PORT: http://localhost:${process.env.PORT}`)
-  })
-} catch (error) {
-  throw new Error(`Can't start Express: ${error}`)
+    
+    server.listen(process.env.PORT, () => {
+      console.info('💻 Reboot Server Live')
+      console.info(`📡 PORT: http://localhost:${process.env.PORT}`)
+    })
+  } catch (error) {
+    throw new Error(`Can't start Express: ${error}`)
 }
 
 io.on('connection', function(socket) {
   console.log(socket.id + ' has connected')
-  console.log(room)
+  console.log('room: ' + room)
 
   socket.on('message', data => {
       data = JSON.parse(data)
