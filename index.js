@@ -10,7 +10,7 @@ const morgan = require('morgan')
 const server = require('http').Server(app)
 const io = require('socket.io')(server,
   { cors: {
-    origin:'http://localhost:3000' }
+    origin:'https://peek-beats.netlify.app' }
   }
 )
 
@@ -30,7 +30,7 @@ const room = {}
 
 try {
   app
-    .use(cors('http://localhost:3000'))
+    .use(cors('https://peek-beats.netlify.app'))
     .use(morgan('dev'))
     .use(express.json())
     .use(express.static('public'))
