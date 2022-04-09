@@ -50,7 +50,9 @@ io.on('connection', function(socket) {
   console.log('room: ' + room)
 
   socket.on('message', data => {
+    console.log('message: ' + data)
       data = JSON.parse(data)
+      console.log('message: ' + data)
       if (!room[data.room]) {
           room[data.room] = [socket.id]
       } else if (room[data.room].length < 2) {
@@ -68,14 +70,14 @@ io.on('connection', function(socket) {
   })
 
   socket.on('join', (roomId) => {
-      console.log('join' + roomId)
+      console.log('join: ' + roomId)
       if (room[roomId] && room[roomId].length === 2) {
           socket.emit('reject', { error: 'Room is full' })
       }
   })
 
   socket.on('leave', (roomId) => {
-      console.log('leave' + roomId)
+      console.log('leave: ' + roomId)
       for (s in room) {
           for (let i = 0; i < room[s].length; i++) {
               if (room[s][i] === roomId) {
