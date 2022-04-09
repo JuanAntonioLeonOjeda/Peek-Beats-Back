@@ -54,9 +54,6 @@ io.on('connection', function(socket) {
       console.log('room parse: ' + JSON.stringify(room))
       console.log('data parse: ' + JSON.stringify(data))
       console.log('data: ' + data)
-      for(info in data) {
-        console.log('dentro de data: ' + info)
-      }
       console.log('message data: ' + data.data)
       console.log('data.room: ' + data.room)
       console.log('room[data.data]: ' + room[data.data])
