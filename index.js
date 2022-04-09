@@ -51,19 +51,23 @@ io.on('connection', function(socket) {
   
   socket.on('message', data => {
     // data = JSON.parse(data)
-      console.log('room parse: ' + JSON.stringify(room))
-      console.log('data parse: ' + JSON.stringify(data))
+      // console.log('room parse: ' + JSON.stringify(room))
+      // console.log('data parse: ' + JSON.stringify(data))
       console.log('data: ' + data)
-      console.log('message data: ' + data.data)
+      console.log('data.data: ' + data.data)
       console.log('data.room: ' + data.room)
       console.log('room[data.data]: ' + room[data.data])
       console.log('room2: ' + room)
+      console.log('room2 stringify: ' + JSON.stringify(room))
+      console.log('room[data.room]: ' + room[data.room])
+      console.log('socket.id: ' + socket.id)
       if (!room[data.room]) {
         console.log('room3: ' + room)
           room[data.room] = [socket.id]
       } else if (room[data.room].length < 2) {
         console.log('room[data.room].length < 2')
           if (room[data.room].filter(i => i === socket.id).length === 0) {
+            console.log('dentro')
               room[data.room].push(socket.id)
           }
         console.log('room[data.room]' + room[data.room])
