@@ -8,7 +8,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const server = require('http').Server(app)
-const io = require('socket.io')(server, { cors: { origins: '*:*' }}
+const io = require('socket.io')(server, { origins: '*:*' } 
   // { cors: {
   //   origin:'https://peek-beats.netlify.app' }
   // }
