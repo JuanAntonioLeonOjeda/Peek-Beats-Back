@@ -48,11 +48,14 @@ try {
 io.on('connection', function(socket) {
   console.log(socket.id + ' has connected')
   console.log('room1: ' + room)
-  // console.log('room parse: ' + JSON.parse(room))
-
+  
   socket.on('message', data => {
-      // data = JSON.parse(data)
+    // data = JSON.parse(data)
+      console.log('room parse: ' + JSON.parse(room))
       console.log('data: ' + data)
+      for(info in data) {
+        console.log('dentro de data: ' + info)
+      }
       console.log('message data: ' + data.data)
       console.log('data.room: ' + data.room)
       console.log('room[data.data]: ' + room[data.data])
