@@ -50,7 +50,7 @@ io.on('connection', function(socket) {
   console.log('room1: ' + room)
   
   socket.on('message', data => {
-    // data = JSON.parse(data)
+      data = JSON.parse(data)
       // console.log('room parse: ' + JSON.stringify(room))
       // console.log('data parse: ' + JSON.stringify(data))
       console.log('data: ' + data)
