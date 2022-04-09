@@ -51,11 +51,11 @@ io.on('connection', function(socket) {
 
   socket.on('message', data => {
       console.log('data pre parse: ' + data)
-      data = JSON.parse(data)
+      // data = JSON.parse(data)
       console.log('data post parse: ' + data)
       console.log('message data: ' + data.data)
       if (!room[data.room]) {
-          room[data.room] = [socket.id]   // si la identidad del usuario no está asignada a la sala, se la asignamos
+          room[data.room] = [socket.id]
       } else if (room[data.room].length < 2) {
         console.log('room[data.room].length < 2')
           if (room[data.room].filter(i => i === socket.id).length === 0) {
