@@ -8,10 +8,10 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const server = require('http').Server(app)
-const io = require('socket.io')(server, { origins: '*:*' } 
-  // { cors: {
-  //   origin:'https://peek-beats.netlify.app' }
-  // }
+const io = require('socket.io')(server,
+  { cors: {
+    origin:'https://peek-beats.netlify.app' }
+  }
 )
 
 ; (async function () {
@@ -51,7 +51,8 @@ io.on('connection', function(socket) {
   
   socket.on('message', data => {
     // data = JSON.parse(data)
-      console.log('room parse: ' + JSON.parse(room))
+      console.log('room parse: ' + JSON.stringify(room))
+      console.log('data parse: ' + JSON.stringify(data))
       console.log('data: ' + data)
       for(info in data) {
         console.log('dentro de data: ' + info)
