@@ -50,8 +50,9 @@ io.on('connection', function(socket) {
   console.log('room: ' + room)
 
   socket.on('message', data => {
+      console.log('data pre parse: ' + data)
       data = JSON.parse(data)
-      console.log('message: ' + data)
+      console.log('data post parse: ' + data)
       console.log('message data: ' + data.data)
       if (!room[data.room]) {
           room[data.room] = [socket.id]   // si la identidad del usuario no está asignada a la sala, se la asignamos
