@@ -7,12 +7,12 @@ const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
-const server = require('http').Server(app)
-const io = require('socket.io')(server,
-  { cors: {
-    origin:'https://peek-beats.netlify.app' }
-  }
-)
+// const server = require('http').Server(app)
+// const io = require('socket.io')(server,
+//   { cors: {
+//     origin:'https://peek-beats.netlify.app' }
+//   }
+// )
 
 ; (async function () {
   try {
@@ -37,7 +37,7 @@ try {
     .use('/api', require('./api/routes'))
 
     
-    server.listen(process.env.PORT, () => {
+    .listen(process.env.PORT, () => {
       console.info('💻 Reboot Server Live')
       console.info(`📡 PORT: http://localhost:${process.env.PORT}`)
     })
