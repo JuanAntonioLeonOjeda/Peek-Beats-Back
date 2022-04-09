@@ -48,7 +48,7 @@ try {
 io.on('connection', function(socket) {
   console.log(socket.id + ' has connected')
   console.log('room1: ' + room)
-  console.log('room parse: ' + JSON.parse(room))
+  // console.log('room parse: ' + JSON.parse(room))
 
   socket.on('message', data => {
       // data = JSON.parse(data)
