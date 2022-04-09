@@ -92,6 +92,8 @@ io.on('connection', function(socket) {
       if (room[roomId] && room[roomId].length === 2) {
           socket.emit('reject', { error: 'Room is full' })
       }
+      socket.join(roomId)
+      socket.to(roomId).emit('user connected')
   })
 
   socket.on('leave', (roomId) => {
