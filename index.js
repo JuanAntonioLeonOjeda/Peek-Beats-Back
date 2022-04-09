@@ -47,14 +47,18 @@ try {
 
 io.on('connection', function(socket) {
   console.log(socket.id + ' has connected')
-  console.log('room: ' + room)
+  console.log('room1: ' + room)
+  console.log('room parse: ' + JSON.parse(room))
 
   socket.on('message', data => {
-      console.log('data pre parse: ' + data)
       // data = JSON.parse(data)
-      console.log('data post parse: ' + data)
+      console.log('data: ' + data)
       console.log('message data: ' + data.data)
+      console.log('data.room: ' + data.room)
+      console.log('room[data.data]: ' + room[data.data])
+      console.log('room2: ' + room)
       if (!room[data.room]) {
+        console.log('room3: ' + room)
           room[data.room] = [socket.id]
       } else if (room[data.room].length < 2) {
         console.log('room[data.room].length < 2')
