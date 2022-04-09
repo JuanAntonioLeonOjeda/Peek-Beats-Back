@@ -58,13 +58,13 @@ io.on('connection', function(socket) {
               room[data.room].push(socket.id)
           }
       }
-      // if (room[data.room].length === 2) {
-      //     for (s of room[data.room]) {
-      //         if (s !== socket.id && io.sockets.sockets[s] && room[data.room].length <= 2) {
-      //             io.sockets.sockets[s].emit('message', data.data)
-      //         }
-      //     }
-      // }
+      if (room[data.room].length === 2) {
+          for (s of room[data.room]) {
+              if (s !== socket.id && io.sockets.sockets[s] && room[data.room].length <= 2) {
+                  io.sockets.sockets[s].emit('message', data.data)
+              }
+          }
+      }
   })
 
   socket.on('join', (roomId) => {
