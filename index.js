@@ -52,8 +52,9 @@ io.on('connection', function(socket) {
   socket.on('message', data => {
       data = JSON.parse(data)
       console.log('message: ' + data)
+      console.log('message data: ' + data.data)
       if (!room[data.room]) {
-          room[data.room] = [socket.id]
+          room[data.room] = [socket.id]   // si la identidad del usuario no está asignada a la sala, se la asignamos
       } else if (room[data.room].length < 2) {
         console.log('room[data.room].length < 2')
           if (room[data.room].filter(i => i === socket.id).length === 0) {
@@ -64,6 +65,9 @@ io.on('connection', function(socket) {
       if (room[data.room].length === 2) {
         console.log('room[data.room].length === 2')
           for (s of room[data.room]) {
+            console.log('s: ' + s)
+            console.log('io.sockets = ' + io.sockets)
+            console.log('io.sockets.sockets = ' + io.sockets.sockets)
               if (s !== socket.id && io.sockets.sockets[s] && room[data.room].length <= 2) {
                   io.sockets.sockets[s].emit('message', data.data)
                   console.log('message emitted: ' + data.data)
