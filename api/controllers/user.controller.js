@@ -10,6 +10,21 @@ async function getAllUsers(req, res) {
   }
 }
 
+async function getTopStreamers(req, res) {
+  try {
+    const users = await UserModel.find()
+    users.sort((a,b) => {
+      return b.followers.length - a.followers.length
+    })
+    const top5 = users.filter((user, index) => {
+      return index < 5
+    })
+    res.status(200).json(top5)
+  } catch (error) {
+    res.status(500).send(`Couldn't get top streamers ${error}`)
+  }
+}
+
 async function deleteProfile(req, res) {
   try {
     const user = await UserModel.findByIdAndDelete(res.locals.user.id)
@@ -97,10 +112,21 @@ async function getMyFavoriteStreamers(req, res) {
 
 async function addFavoriteStreamer(req, res) {
   try {
+    console.log('in')
     const user = res.locals.user
-    user.favoriteStreamers.push(req.params.favoriteStreamerId)
+    if(user.favoriteStreamers.indexOf(req.params.favoriteStreamerId) === -1) {
+      user.favoriteStreamers.push(req.params.favoriteStreamerId)
+    } else {
+      return res.status(200).send('Streamer already in your favourites list!')
+    }
+
+    const streamer = await UserModel.findById(req.params.favoriteStreamerId)
+    streamer.followers.push(user.id)
+    console.log(user)
+    console.log(streamer)
     await user.save()
-    res.status(200).send("Streamer added to your list!")
+    await streamer.save()
+    res.status(200).send(`${streamer.userName} added to your list!`)
   } catch (error) {
     res.status(500).send(`Couldn't add streamer to favorites list, error: ${error}`)
   }
@@ -197,6 +223,7 @@ async function removeBadgeFromUser(req, res) {
 
 module.exports = {
   getAllUsers,
+  getTopStreamers,
   deleteProfile,
   getProfile,
   updateProfile,
