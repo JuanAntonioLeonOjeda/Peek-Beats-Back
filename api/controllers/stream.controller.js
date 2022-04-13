@@ -38,7 +38,7 @@ async function getLiveStreams(req, res) {
 async function searchStreams(query) {
   return await StreamModel.find(query, { quality: 0 })
     .populate('streamer', 'userName')
-    .populate('genre', 'name')
+    .populate('genre')
 }
 
 async function resultMessage(query, res) {
