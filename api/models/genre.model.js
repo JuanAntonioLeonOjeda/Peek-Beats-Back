@@ -9,6 +9,9 @@ const genreSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "stream",
     }],
+    image: {
+        type: String
+    }
 })
 
 const GenreModel = mongoose.model('genre', genreSchema)
