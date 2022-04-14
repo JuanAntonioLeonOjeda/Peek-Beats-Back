@@ -84,7 +84,6 @@ async function createStream(req, res) {
     if (streamer.live) return res.status(200).send(`Already streaming. Please stop current stream before starting a new one`)
 
     const stream = await StreamModel.create(req.body)
-    .populate('genre')
 
     await assignStreamer(stream, streamer)
     await addLiveStreamToGenre(stream)
