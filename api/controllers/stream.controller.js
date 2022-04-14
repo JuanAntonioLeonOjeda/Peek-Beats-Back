@@ -49,7 +49,9 @@ async function resultMessage(query, res) {
 async function joinStream(req, res) {
   try {
     const user = res.locals.user
-    const stream = await StreamModel.findById(req.params.id).populate('streamer')
+    const stream = await StreamModel.findById(req.params.id)
+    .populate('streamer')
+    .populate('genre')
     if(!stream.live) return res.status(404).send('This stream has ended')
 
     addCurrentViewer(stream, user)
