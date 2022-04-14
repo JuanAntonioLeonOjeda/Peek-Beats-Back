@@ -85,7 +85,6 @@ async function createStream(req, res) {
 
     const stream = await StreamModel.create(req.body)
     .populate('genre')
-    .populate('streamer')
 
     await assignStreamer(stream, streamer)
     await addLiveStreamToGenre(stream)
