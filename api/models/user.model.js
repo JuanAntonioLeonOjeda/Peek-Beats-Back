@@ -83,7 +83,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: "demoImg",
+    default: "https://www.salisburyut.com/wp-content/uploads/2020/09/avatar-1-2048x2048.jpeg",
   },
 })
 
