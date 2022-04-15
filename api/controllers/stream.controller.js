@@ -63,9 +63,7 @@ async function joinStream(req, res) {
 
     await stream.save()
 
-    const payload = await receiveStream(req.body, senderStream)
-
-    res.status(200).json({ stream: stream, payload: payload })
+    res.status(200).json({ stream: stream })
   } catch (error) {
     res.status(500).send(`Couldn't join stream: ${error}`)
   }
@@ -85,46 +83,48 @@ async function increaseTotalViews(stream, user) {
   }
 }
 
-async function receiveStream (body, senderStream) {
+async function receiveStream (req, res) {
+  try {
+    const peer = new wrtc.RTCPeerConnection({
+      iceServers: [
+        {
+          urls: 'stun.stunprotocol.org'
+        }
+      ]
+    })
 
-  const peer = new wrtc.RTCPeerConnection({
-    iceServers: [
-      {
-        urls: 'stun.stunprotocol.org'
-      }
-    ]
-  })
+    const description = new wrtc.RTCSessionDescription(req.body.sdp)
+    await peer.setRemoteDescription(description)
 
-  const description = new wrtc.RTCSessionDescription(body.sdp)
-  await peer.setRemoteDescription(description)
+    senderStream.getTracks().forEach(track => {
+      peer.addTrack(track, senderStream)
+    })
 
-  senderStream.getTracks().forEach(track => {
-    peer.addTrack(track, senderStream)
-  })
+    const answer = await peer.createAnswer()
+    await peer.setLocalDescription(answer)
 
-  const answer = await peer.createAnswer()
-  await peer.setLocalDescription(answer)
+    const payload = {
+      sdp: peer.setLocalDescription
+    }
+    
+    res.status(200).json(payload)
 
-  const payload = {
-    sdp: peer.setLocalDescription
+  } catch (error) {
+    res.status(500).send(`Error fetching stream: ${error}`)
   }
-  
-  return payload
 }
 
 async function createStream(req, res) {
   try {
     const streamer = res.locals.user
     if (streamer.live) return res.status(200).send(`Already streaming. Please stop current stream before starting a new one`)
-
+    console.log(req.body)
     const stream = await StreamModel.create(req.body)
 
     await assignStreamer(stream, streamer)
     await addLiveStreamToGenre(stream)
-    
-    const payload = await createConnection(req.body)
 
-    res.status(200).json({ message: 'Stream started!', id: stream.id, payload: payload })
+    res.status(200).json({ message: 'Stream started!', id: stream.id })
   } catch (error) {
     res.status(500).send(`Couldn't start stream: ${error}`)
   }
@@ -146,28 +146,31 @@ async function createStream(req, res) {
     await genre.save()
   }
 
-  async function createConnection (body) {
-
-    const peer = new wrtc.RTCPeerConnection({
-      iceServers: [
-        {
-          urls: 'stun.stunprotocol.org'
-        }
-      ]
-    })
-
-    peer.ontrack = (e) => handleTrackEvent(e, peer)
-    const description = new wrtc.RTCSessionDescription(body.sdp)
-    await peer.setRemoteDescription(description)
-
-    const answer = await peer.createAnswer()
-    await peer.setLocalDescription(answer)
-
-    const payload = {
-      sdp: peer.setLocalDescription
+  async function broadcast (req, res) {
+    try {
+      const peer = new wrtc.RTCPeerConnection({
+        iceServers: [
+          {
+            urls: 'stun.stunprotocol.org'
+          }
+        ]
+      })
+  
+      peer.ontrack = (e) => handleTrackEvent(e, peer)
+      const description = new wrtc.RTCSessionDescription(req.body.sdp)
+      await peer.setRemoteDescription(description)
+  
+      const answer = await peer.createAnswer()
+      await peer.setLocalDescription(answer)
+  
+      const payload = {
+        sdp: peer.setLocalDescription
+      }
+      
+      res.status(200).json(payload)
+    } catch (error) {
+      res.status(500).send(`Error broadcasting: ${error}`)
     }
-    
-    return payload
   }
 
   function handleTrackEvent(e, peer) {
@@ -260,6 +263,8 @@ module.exports = {
   getLiveStreams,
   joinStream,
   createStream,
+  broadcast,
+  receiveStream,
   updateStream,
   stopStream,
   removeStream

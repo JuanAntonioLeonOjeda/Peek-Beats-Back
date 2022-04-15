@@ -5,6 +5,8 @@ const {
   getLiveStreams,
   joinStream,
   createStream,
+  broadcast,
+  receiveStream,
   updateStream,
   stopStream,
   removeStream
@@ -19,7 +21,9 @@ router
   .get('/', authUser, authAdmin, getAllStreams)
   .get('/live', authUser, getLiveStreams)
   .post('/me', authUser, createStream)
-  .post('/:id', authUser, joinStream)
+  .post('/broadcast', authUser, broadcast)
+  .post('/receive', authUser, receiveStream)
+  .get('/:id', authUser, joinStream)
   .put('/me', authUser, updateStream)
   .put('/me/stop', authUser, stopStream)
   .delete('/:id', authUser, authAdmin, removeStream)
