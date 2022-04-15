@@ -3,7 +3,6 @@ const UserModel = require('../models/user.model')
 const GenreModel = require('../models/genre.model')
 
 const wrtc = require('wrtc')
-const { createConnection } = require('net')
 
 let senderStream
 
