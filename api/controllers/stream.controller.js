@@ -2,6 +2,11 @@ const StreamModel = require('../models/stream.model')
 const UserModel = require('../models/user.model')
 const GenreModel = require('../models/genre.model')
 
+const wrtc = require('wrtc')
+const { createConnection } = require('net')
+
+let senderStream
+
 async function getAllStreams(req, res) {
   try {
     const streams = await StreamModel.find({}, { currentViewers: 0, quality: 0 }).populate('streamer', 'email')
@@ -58,7 +63,10 @@ async function joinStream(req, res) {
     await increaseTotalViews(stream, user)
 
     await stream.save()
-    res.status(200).json(stream)
+
+    const payload = await receiveStream(req.body, senderStream)
+
+    res.status(200).json({ stream: stream, payload: payload })
   } catch (error) {
     res.status(500).send(`Couldn't join stream: ${error}`)
   }
@@ -78,6 +86,33 @@ async function increaseTotalViews(stream, user) {
   }
 }
 
+async function receiveStream (body, senderStream) {
+
+  const peer = new wrtc.RTCPeerConnection({
+    iceServers: [
+      {
+        urls: 'stun.stunprotocol.org'
+      }
+    ]
+  })
+
+  const description = new wrtc.RTCSessionDescription(body.sdp)
+  await peer.setRemoteDescription(description)
+
+  senderStream.getTracks().forEach(track => {
+    peer.addTrack(track, senderStream)
+  })
+
+  const answer = await peer.createAnswer()
+  await peer.setLocalDescription(answer)
+
+  const payload = {
+    sdp: peer.setLocalDescription
+  }
+  
+  return payload
+}
+
 async function createStream(req, res) {
   try {
     const streamer = res.locals.user
@@ -88,7 +123,9 @@ async function createStream(req, res) {
     await assignStreamer(stream, streamer)
     await addLiveStreamToGenre(stream)
     
-    res.status(200).json({ message: 'Stream started!', id: stream.id })
+    const payload = await createConnection(req.body)
+
+    res.status(200).json({ message: 'Stream started!', id: stream.id, payload: payload })
   } catch (error) {
     res.status(500).send(`Couldn't start stream: ${error}`)
   }
@@ -108,6 +145,34 @@ async function createStream(req, res) {
     genre.streams.push(stream.id)
     
     await genre.save()
+  }
+
+  async function createConnection (body) {
+
+    const peer = new wrtc.RTCPeerConnection({
+      iceServers: [
+        {
+          urls: 'stun.stunprotocol.org'
+        }
+      ]
+    })
+
+    peer.ontrack = (e) => handleTrackEvent(e, peer)
+    const description = new wrtc.RTCSessionDescription(body.sdp)
+    await peer.setRemoteDescription(description)
+
+    const answer = await peer.createAnswer()
+    await peer.setLocalDescription(answer)
+
+    const payload = {
+      sdp: peer.setLocalDescription
+    }
+    
+    return payload
+  }
+
+  function handleTrackEvent(e, peer) {
+    senderStream = e.streams[0]
   }
 
 async function updateStream(req, res) {
