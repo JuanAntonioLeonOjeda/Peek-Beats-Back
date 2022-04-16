@@ -88,7 +88,7 @@ async function receiveStream (req, res) {
     const peer = new wrtc.RTCPeerConnection({
       iceServers: [
         {
-          urls: 'stun.stunprotocol.org'
+          urls: 'stun:stun.stunprotocol.org'
         }
       ]
     })
@@ -151,7 +151,7 @@ async function createStream(req, res) {
       const peer = new wrtc.RTCPeerConnection({
         iceServers: [
           {
-            urls: 'stun.stunprotocol.org'
+            urls: 'stun:stun.stunprotocol.org'
           }
         ]
       })
