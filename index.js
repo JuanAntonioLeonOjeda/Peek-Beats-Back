@@ -30,7 +30,7 @@ const room = {}
 
 try {
   app
-    .use(cors('https://peek-beats.netlify.app'))
+    .use(cors('https://deft-jelly-5f3d79.netlify.app'))
     .use(morgan('dev'))
     .use(express.json())
     .use(express.static('public'))
