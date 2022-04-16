@@ -118,7 +118,6 @@ async function createStream(req, res) {
   try {
     const streamer = res.locals.user
     if (streamer.live) return res.status(200).send(`Already streaming. Please stop current stream before starting a new one`)
-    console.log(req.body)
     const stream = await StreamModel.create(req.body)
 
     await assignStreamer(stream, streamer)
@@ -166,7 +165,7 @@ async function createStream(req, res) {
       const payload = {
         sdp: peer.setLocalDescription
       }
-      
+      console.log(payload)
       res.status(200).json(payload)
     } catch (error) {
       res.status(500).send(`Error broadcasting: ${error}`)
