@@ -27,7 +27,7 @@ const morgan = require('morgan')
 
 const port = process.env.PORT || 5000
 const room = {}
-
+// .use(cors('https://deft-jelly-5f3d79.netlify.app'))
 try {
   app
     .use(cors('https://deft-jelly-5f3d79.netlify.app'))
