@@ -30,7 +30,7 @@ const room = {}
 // .use(cors('https://deft-jelly-5f3d79.netlify.app'))
 try {
   app
-    .use(cors('https://deft-jelly-5f3d79.netlify.app'))
+    .use(cors('http://localhost:3000'))
     .use(morgan('dev'))
     .use(express.json())
     .use(express.static('public'))
