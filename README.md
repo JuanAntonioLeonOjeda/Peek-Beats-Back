@@ -1,4 +1,4 @@
-# Project-3: PeekBeats-Streaming-App
+# Project-3: PeekBeats - Streaming App
 
 ### Auth Endpoints
 
@@ -12,6 +12,7 @@
 | METHOD | ENDPOINT                  | TOKEN | ROLE  | DESCRIPTION                  | POST PARAMS                | RETURNS                              |
 | ------ | ------------------------- | ----- | ----- | ---------------------------- | -------------------------- | ------------------------------------ |
 | GET    | /users                    | YES   | Admin | Get all users                | -                          | [{ users }]                          |
+| GET    | /users/top                | YES   | -     | Get top users                | -                          | [{ users }]                          |
 | GET    | /users/:userId            | YES   | Admin | Get one user                 | user_id                    | { user }                             |
 | DELETE | /users/me                 | YES   | -     | Remove own profile           | user_id                    | "Profile deleted"                    |
 | GET    | /users/me                 | YES   | -     | Get own profile              | user_id                    | { user }                             |
@@ -39,12 +40,15 @@
 
 ### Streams Endpoints
 
-| METHOD | ENDPOINT     | TOKEN | ROLE  | DESCRIPTION     | POST PARAMS         | RETURNS                    |
-| ------ | ------------ | ----- | ----- | --------------- | ------------------- | -------------------------- |
-| GET    | /streams     | YES   | -     | Get all streams | query: search string| [{ streams }]              |
-| GET    | /streams/:id | YES   | -     | Join stream     | stream_id           | { stream }                 |
-| POST   | /me/streams  | YES   | -     | Create stream   | -                   | { stream }                 |
-| DELETE | /streams/:id | YES   | Admin | Remove stream   | stream_id           | "Streams has been deleted" |
+| METHOD | ENDPOINT        | TOKEN | ROLE  | DESCRIPTION          | POST PARAMS         | RETURNS                    |
+| ------ | --------------- | ----- | ----- | -------------------- | ------------------- | -------------------------- |
+| GET    | /streams        | YES   | -     | Get all streams      | query: search string| [{ streams }]              |
+| GET    | /streams/live   | YES   | -     | Get all live streams | -                   | [{ streams }]              |
+| GET    | /streams/:id    | YES   | -     | Join stream          | stream_id           | { stream }                 |
+| POST   | /streams/me     | YES   | -     | Create stream        | -                   | { stream }                 |
+| PUT    | /streams/me     | YES   | -     | Update stream        | -                   | {{stream}}                 |
+| PUT    | /streams/me/stop| YES   | -     | Stop stream          | -                   | "Stream Stopped"           |
+| DELETE | /streams/:id    | YES   | Admin | Remove stream        | stream_id           | "Streams has been deleted" |
 
 ### Genres Endpoints
 
