@@ -1,4 +1,4 @@
-# Project-3---NAME-Streaming-App
+# Project-3: PeekBeats-Streaming-App
 
 ### Auth Endpoints
 
